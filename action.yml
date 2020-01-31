@@ -1,0 +1,6 @@
+name: 'Build PSF (Docker) Image'
+description: 'Builds a PSF/BFF Docker image (a deployable service)'
+author: 'Peachjar Engineering'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
