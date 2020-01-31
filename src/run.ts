@@ -8,6 +8,7 @@ export default async function run(
     context: Context,
     exec: ExecFn,
     core: {
+        getInput: (key: string, opts?: { required: boolean }) => string,
         setOutput: (name: string, value: string) => void,
         info: (...args: any[]) => void,
         debug: (...args: any[]) => void,
@@ -19,6 +20,8 @@ export default async function run(
     try {
         core.info('Starting Docker image build.')
 
+        const skipIntegrationTests = (core.getInput('skipIntegrationTests') || 'false').toLowerCase() === 'true'
+
         const repo = context.repo.repo
         const sha7 = context.sha.slice(0, 7)
         const imageName = repo.startsWith('peachjar-') ? repo.slice('peachjar-'.length) : repo
@@ -27,7 +30,7 @@ export default async function run(
         await exec('docker', [
             'build',
             '--network=host',
-            '--build-arg', 'SKIP_INTEGRATION_TESTS=true',
+            '--build-arg', `SKIP_INTEGRATION_TESTS=${skipIntegrationTests}`,
             '-t', dockerImage, '.',
         ])
 

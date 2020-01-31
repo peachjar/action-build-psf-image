@@ -11,3 +11,11 @@ This action will build and test a PSF/BFF Docker image.
 ```
 uses: peachjar/action-build-psf-image@v1
 ```
+
+And if you want to skip integration tests:
+
+```
+uses: peachjar/action-build-psf-image@v1
+with:
+  skipIntegrationTests: true
+```

@@ -24286,6 +24286,7 @@ function run(context, exec, core) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.info('Starting Docker image build.');
+            const skipIntegrationTests = (core.getInput('skipIntegrationTests') || 'false').toLowerCase() === 'true';
             const repo = context.repo.repo;
             const sha7 = context.sha.slice(0, 7);
             const imageName = repo.startsWith('peachjar-') ? repo.slice('peachjar-'.length) : repo;
@@ -24293,7 +24294,7 @@ function run(context, exec, core) {
             yield exec('docker', [
                 'build',
                 '--network=host',
-                '--build-arg', 'SKIP_INTEGRATION_TESTS=true',
+                '--build-arg', `SKIP_INTEGRATION_TESTS=${skipIntegrationTests}`,
                 '-t', dockerImage, '.',
             ]);
             core.debug('Extracting test coverage from Docker image.');

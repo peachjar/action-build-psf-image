@@ -16,6 +16,7 @@ RUN npm run build
 
 # TEST PHASE
 FROM node:12-alpine as test
+ARG SKIP_INTEGRATION_TESTS=false
 
 WORKDIR /opt/svc/
 
@@ -26,6 +27,9 @@ RUN npm run lint
 
 ENV JEST_JUNIT_OUTPUT="reports/unit/results.xml"
 RUN npm run coverage -- --runInBand --ci --testResultsProcessor="jest-junit"
+
+ENV JEST_JUNIT_OUTPUT="reports/unit/results-integ.xml"
+RUN [ "$SKIP_INTEGRATION_TESTS" = true ] || echo "Integration tests ran"
 
 # ARTIFACT PHASE
 FROM node:12-alpine as artifact

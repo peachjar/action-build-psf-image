@@ -7,6 +7,7 @@ describe('Run function', () => {
     let context: Context
     let exec: ExecFn
     let core: {
+        getInput: (key: string, opts?: { required: boolean }) => string,
         setOutput: (name: string, value: string) => void,
         debug: (...args: any[]) => void,
         info: (...args: any[]) => void,
@@ -21,6 +22,7 @@ describe('Run function', () => {
         } as any) as Context
         exec = jest.fn(() => Promise.resolve(0))
         core = {
+            getInput: jest.fn(() => 'false'),
             setOutput: jest.fn(),
             debug: jest.fn(),
             info: jest.fn(),
@@ -35,7 +37,7 @@ describe('Run function', () => {
             expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
                 'build',
                 '--network=host',
-                '--build-arg', 'SKIP_INTEGRATION_TESTS=true',
+                '--build-arg', 'SKIP_INTEGRATION_TESTS=false',
                 '-t', expectedImage, '.',
             ])
             expect(exec).toHaveBeenNthCalledWith(2, 'docker', [
@@ -52,6 +54,25 @@ describe('Run function', () => {
             ])
             expect(core.setOutput).toHaveBeenCalledWith('image', expectedImage)
             expect(core.setFailed).not.toHaveBeenCalled()
+        })
+
+        describe('and skipIntegrationTests input is [true]', () => {
+
+            beforeEach(() => {
+                core.getInput = jest.fn(() => 'true')
+            })
+
+            it('should build the Docker image and skip integration tests', async () => {
+                const expectedImage = 'docker.pkg.github.com/peachjar/peachjar-svc-auth/svc-auth:git-6c631b0'
+                await run(context, exec, core)
+                expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
+                    'build',
+                    '--network=host',
+                    '--build-arg', 'SKIP_INTEGRATION_TESTS=true',
+                    '-t', expectedImage, '.',
+                ])
+                expect(core.setFailed).not.toHaveBeenCalled()
+            })
         })
     })
 

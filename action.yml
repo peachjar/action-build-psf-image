@@ -4,3 +4,11 @@ author: 'Peachjar Engineering'
 runs:
   using: 'node12'
   main: 'dist/index.js'
+inputs:
+  skipIntegrationTests:
+    required: false
+    description: If true, integration tests should not be ran in the container.
+    default: false
+outputs:
+  image:
+    description: Full docker image (with registry)
