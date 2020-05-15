@@ -19,3 +19,11 @@ uses: peachjar/action-build-psf-image@v1
 with:
   skipIntegrationTests: true
 ```
+
+And if you want a custom image name:
+
+```
+uses: peachjar/action-build-psf-image@v1
+with:
+  imageName: foobar
+```
