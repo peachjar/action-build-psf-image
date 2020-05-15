@@ -3,12 +3,21 @@ import { Context } from '@actions/github/lib/context'
 import * as im from '@actions/exec/lib/interfaces'
 
 export type ExecFn = (commandLine: string, args?: string[], options?: im.ExecOptions) => Promise<number>
+export type GetInputFn = (key: string, opts?: { required: boolean }) => string
+
+function resolveImageName(getInput: GetInputFn, repo: string): string {
+    let imageName = getInput('imageName')
+    if (!imageName) {
+        imageName = repo.startsWith('peachjar-') ? repo.slice('peachjar-'.length) : repo
+    }
+    return imageName
+}
 
 export default async function run(
     context: Context,
     exec: ExecFn,
     core: {
-        getInput: (key: string, opts?: { required: boolean }) => string,
+        getInput: GetInputFn,
         setOutput: (name: string, value: string) => void,
         info: (...args: any[]) => void,
         debug: (...args: any[]) => void,
@@ -24,7 +33,8 @@ export default async function run(
 
         const repo = context.repo.repo
         const sha7 = context.sha.slice(0, 7)
-        const imageName = repo.startsWith('peachjar-') ? repo.slice('peachjar-'.length) : repo
+        const imageName = resolveImageName(core.getInput, repo)
+
         const dockerImage = `docker.pkg.github.com/${context.repo.owner}/${repo}/${imageName}:git-${sha7}`
 
         await exec('docker', [

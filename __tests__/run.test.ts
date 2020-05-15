@@ -22,7 +22,10 @@ describe('Run function', () => {
         } as any) as Context
         exec = jest.fn(() => Promise.resolve(0))
         core = {
-            getInput: jest.fn(() => 'false'),
+            getInput: jest.fn((key) => {
+                if (key === 'skipIntegrationTests') return 'false'
+                return ''
+            }),
             setOutput: jest.fn(),
             debug: jest.fn(),
             info: jest.fn(),
@@ -59,7 +62,10 @@ describe('Run function', () => {
         describe('and skipIntegrationTests input is [true]', () => {
 
             beforeEach(() => {
-                core.getInput = jest.fn(() => 'true')
+                core.getInput = jest.fn((key) => {
+                    if (key === 'skipIntegrationTests') return 'true'
+                    return ''
+                })
             })
 
             it('should build the Docker image and skip integration tests', async () => {
@@ -69,6 +75,28 @@ describe('Run function', () => {
                     'build',
                     '--network=host',
                     '--build-arg', 'SKIP_INTEGRATION_TESTS=true',
+                    '-t', expectedImage, '.',
+                ])
+                expect(core.setFailed).not.toHaveBeenCalled()
+            })
+        })
+
+        describe('and imageName is provided', () => {
+
+            beforeEach(() => {
+                core.getInput = jest.fn((key) => {
+                    if (key === 'imageName') return 'jojo-rabbit'
+                    return 'false'
+                })
+            })
+
+            it('should build the Docker image with a custom name', async () => {
+                const expectedImage = 'docker.pkg.github.com/peachjar/peachjar-svc-auth/jojo-rabbit:git-6c631b0'
+                await run(context, exec, core)
+                expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
+                    'build',
+                    '--network=host',
+                    '--build-arg', 'SKIP_INTEGRATION_TESTS=false',
                     '-t', expectedImage, '.',
                 ])
                 expect(core.setFailed).not.toHaveBeenCalled()

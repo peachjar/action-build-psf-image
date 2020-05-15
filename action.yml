@@ -5,6 +5,9 @@ runs:
   using: 'node12'
   main: 'dist/index.js'
 inputs:
+  imageName:
+    required: false
+    description: When present, override the name of the image
   skipIntegrationTests:
     required: false
     description: If true, integration tests should not be ran in the container.
