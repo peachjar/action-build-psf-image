@@ -1,8 +1,8 @@
 {
-  "name": "@peachjar/action-trigger-deployment",
+  "name": "@peachjar/action-build-psf-image",
   "version": "0.0.1",
   "private": true,
-  "description": "Trigger a Github Deployment on the current repository",
+  "description": "Build a PSF-based Docker image",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",

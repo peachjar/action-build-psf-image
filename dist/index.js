@@ -24282,6 +24282,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+function resolveImageName(getInput, repo) {
+    let imageName = getInput('imageName');
+    if (!imageName) {
+        imageName = repo.startsWith('peachjar-') ? repo.slice('peachjar-'.length) : repo;
+    }
+    return imageName;
+}
 function run(context, exec, core) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -24289,7 +24296,7 @@ function run(context, exec, core) {
             const skipIntegrationTests = (core.getInput('skipIntegrationTests') || 'false').toLowerCase() === 'true';
             const repo = context.repo.repo;
             const sha7 = context.sha.slice(0, 7);
-            const imageName = repo.startsWith('peachjar-') ? repo.slice('peachjar-'.length) : repo;
+            const imageName = resolveImageName(core.getInput, repo);
             const dockerImage = `docker.pkg.github.com/${context.repo.owner}/${repo}/${imageName}:git-${sha7}`;
             yield exec('docker', [
                 'build',
