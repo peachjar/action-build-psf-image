@@ -1,3 +1,4 @@
+import { flatten } from 'lodash'
 import { Context } from '@actions/github/lib/context'
 
 import * as im from '@actions/exec/lib/interfaces'
@@ -11,6 +12,18 @@ function resolveImageName(getInput: GetInputFn, repo: string): string {
         imageName = repo.startsWith('peachjar-') ? repo.slice('peachjar-'.length) : repo
     }
     return imageName
+}
+
+export function parseExtraBuildArgs(argsStr: string): string[] {
+    // This is dev-facing - otherwise we would want to be more careful
+    // about escaping this code
+    const obj = JSON.parse(argsStr)
+    const buildArgs = flatten(Object.keys(obj).map(k => ([
+        '--build-arg',
+        `${k}=${obj[k]}`,
+    ])))
+
+    return buildArgs
 }
 
 export default async function run(
@@ -30,6 +43,7 @@ export default async function run(
         core.info('Starting Docker image build.')
 
         const skipIntegrationTests = (core.getInput('skipIntegrationTests') || 'false').toLowerCase() === 'true'
+        const extraBuildArgs = core.getInput('extraBuildArgs') || '{}'
 
         const repo = context.repo.repo
         const sha7 = context.sha.slice(0, 7)
@@ -41,6 +55,7 @@ export default async function run(
             'build',
             '--network=host',
             '--build-arg', `SKIP_INTEGRATION_TESTS=${skipIntegrationTests}`,
+            ...parseExtraBuildArgs(extraBuildArgs),
             '-t', dockerImage, '.',
         ])
 

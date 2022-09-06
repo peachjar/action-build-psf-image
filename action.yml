@@ -12,6 +12,10 @@ inputs:
     required: false
     description: If true, integration tests should not be ran in the container.
     default: false
+  extraBuildArgs:
+    required: false
+    description: JSON string of extra build args to include when building.
+    default: '{}'
 outputs:
   image:
     description: Full docker image (with registry)
