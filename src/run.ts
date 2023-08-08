@@ -35,7 +35,7 @@ export default async function run(
         const sha7 = context.sha.slice(0, 7)
         const imageName = resolveImageName(core.getInput, repo)
 
-        const dockerImage = `docker.pkg.github.com/${context.repo.owner}/${repo}/${imageName}:git-${sha7}`
+        const dockerImage = `ghcr.io/${context.repo.owner}/${repo}/${imageName}:git-${sha7}`
 
         await exec('docker', [
             'build',

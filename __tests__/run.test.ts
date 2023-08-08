@@ -35,7 +35,7 @@ describe('Run function', () => {
 
     describe('when the image build is successful', () => {
         it('should build the Docker image and pull the test results out of the container', async () => {
-            const expectedImage = 'docker.pkg.github.com/peachjar/peachjar-svc-auth/svc-auth:git-6c631b0'
+            const expectedImage = 'ghcr.io/peachjar/peachjar-svc-auth/svc-auth:git-6c631b0'
             await run(context, exec, core)
             expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
                 'build',
@@ -69,7 +69,7 @@ describe('Run function', () => {
             })
 
             it('should build the Docker image and skip integration tests', async () => {
-                const expectedImage = 'docker.pkg.github.com/peachjar/peachjar-svc-auth/svc-auth:git-6c631b0'
+                const expectedImage = 'ghcr.io/peachjar/peachjar-svc-auth/svc-auth:git-6c631b0'
                 await run(context, exec, core)
                 expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
                     'build',
@@ -91,7 +91,7 @@ describe('Run function', () => {
             })
 
             it('should build the Docker image with a custom name', async () => {
-                const expectedImage = 'docker.pkg.github.com/peachjar/peachjar-svc-auth/jojo-rabbit:git-6c631b0'
+                const expectedImage = 'ghcr.io/peachjar/peachjar-svc-auth/jojo-rabbit:git-6c631b0'
                 await run(context, exec, core)
                 expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
                     'build',
