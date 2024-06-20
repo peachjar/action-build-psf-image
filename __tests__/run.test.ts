@@ -102,6 +102,31 @@ describe('Run function', () => {
                 expect(core.setFailed).not.toHaveBeenCalled()
             })
         })
+
+        describe('and extraBuildArgs is provided', () => {
+
+            beforeEach(() => {
+                core.getInput = jest.fn((key) => {
+                    const extraBuildArgs = { foo: 'bar', spam: 'eggs' }
+                    const ebaStr = JSON.stringify(extraBuildArgs)
+                    if (key === 'extraBuildArgs') return ebaStr
+                    return ''
+                })
+            })
+
+            it('build docker image with extra build-args', async () => {
+                const expectedImage = 'docker.pkg.github.com/peachjar/peachjar-svc-auth/svc-auth:git-6c631b0'
+                await run(context, exec, core)
+                expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
+                    'build',
+                    '--network=host',
+                    '--build-arg', 'SKIP_INTEGRATION_TESTS=false',
+                    '--build-arg', 'foo=bar',
+                    '--build-arg', 'spam=eggs',
+                    '-t', expectedImage, '.',
+                ])
+            })
+        })
     })
 
     describe('when the image build fails', () => {

@@ -26,19 +26,21 @@
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.3",
-    "@actions/github": "^2.1.0"
+    "@actions/github": "^2.1.0",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
+    "@types/lodash": "4.14.117",
     "@types/node": "^12.7.12",
     "@zeit/ncc": "^0.20.5",
     "jest": "^24.9.0",
     "jest-circus": "^24.9.0",
     "jest-junit": "^6.2.1",
     "js-yaml": "^3.13.1",
+    "ts-jest": "^24.2.0",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
-    "ts-jest": "^24.2.0",
     "typescript": "^3.6.4"
   }
 }
