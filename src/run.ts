@@ -41,6 +41,7 @@ export default async function run(
             'build',
             '--network=host',
             '--build-arg', `SKIP_INTEGRATION_TESTS=${skipIntegrationTests}`,
+            '--secret', 'id=NPM_TOKEN,env=GITHUB_TOKEN',
             '-t', dockerImage, '.',
         ])
 

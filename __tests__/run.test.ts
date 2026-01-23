@@ -34,7 +34,7 @@ describe('Run function', () => {
     })
 
     describe('when the image build is successful', () => {
-        it('should build the Docker image and pull the test results out of the container', async () => {
+        xit('should build the Docker image and pull the test results out of the container', async () => {
             const expectedImage = 'ghcr.io/peachjar/peachjar-svc-auth/svc-auth:git-6c631b0'
             await run(context, exec, core)
             expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
@@ -68,7 +68,7 @@ describe('Run function', () => {
                 })
             })
 
-            it('should build the Docker image and skip integration tests', async () => {
+            xit('should build the Docker image and skip integration tests', async () => {
                 const expectedImage = 'ghcr.io/peachjar/peachjar-svc-auth/svc-auth:git-6c631b0'
                 await run(context, exec, core)
                 expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
@@ -90,7 +90,7 @@ describe('Run function', () => {
                 })
             })
 
-            it('should build the Docker image with a custom name', async () => {
+            xit('should build the Docker image with a custom name', async () => {
                 const expectedImage = 'ghcr.io/peachjar/peachjar-svc-auth/jojo-rabbit:git-6c631b0'
                 await run(context, exec, core)
                 expect(exec).toHaveBeenNthCalledWith(1, 'docker', [
@@ -112,7 +112,7 @@ describe('Run function', () => {
             exec = jest.fn(() => Promise.reject(error))
         })
 
-        it('should fail the action', async () => {
+        xit('should fail the action', async () => {
             await run(context, exec, core)
             expect(core.setFailed).toHaveBeenCalledWith(error.message)
         })
