@@ -30,6 +30,7 @@ export default async function run(
         core.info('Starting Docker image build.')
 
         const skipIntegrationTests = (core.getInput('skipIntegrationTests') || 'false').toLowerCase() === 'true'
+        const npmToken = core.getInput('npmToken')
 
         const repo = context.repo.repo
         const sha7 = context.sha.slice(0, 7)
@@ -42,9 +43,9 @@ export default async function run(
             'build',
             '--network=host',
             '--build-arg', `SKIP_INTEGRATION_TESTS=${skipIntegrationTests}`,
-            '--secret', 'id=NPM_TOKEN,env=GITHUB_TOKEN',
+            '--secret', 'id=NPM_TOKEN,env=NPM_TOKEN',
             '-t', dockerImage, '.',
-        ])
+        ], { env: { NPM_TOKEN: npmToken } })
 
         core.debug('Extracting test coverage from Docker image.')
 

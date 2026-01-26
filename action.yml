@@ -12,6 +12,9 @@ inputs:
     required: false
     description: If true, integration tests should not be ran in the container.
     default: false
+  npmToken:
+    required: true
+    description: npm token to use (GITHUB_TOKEN since we use Github Packages)
 outputs:
   image:
     description: Full docker image (with registry)

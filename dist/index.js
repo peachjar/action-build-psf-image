@@ -24439,6 +24439,7 @@ function run(context, exec, core) {
         try {
             core.info('Starting Docker image build.');
             const skipIntegrationTests = (core.getInput('skipIntegrationTests') || 'false').toLowerCase() === 'true';
+            const npmToken = core.getInput('npmToken');
             const repo = context.repo.repo;
             const sha7 = context.sha.slice(0, 7);
             const imageName = resolveImageName(core.getInput, repo);
@@ -24448,9 +24449,9 @@ function run(context, exec, core) {
                 'build',
                 '--network=host',
                 '--build-arg', `SKIP_INTEGRATION_TESTS=${skipIntegrationTests}`,
-                '--secret', 'id=NPM_TOKEN,env=GITHUB_TOKEN',
+                '--secret', 'id=NPM_TOKEN,env=NPM_TOKEN',
                 '-t', dockerImage, '.',
-            ]);
+            ], { env: { NPM_TOKEN: npmToken } });
             core.debug('Extracting test coverage from Docker image.');
             yield exec('docker', ['create', '--name', 'test-results', dockerImage]);
             core.debug('Copying the unit test reports');
