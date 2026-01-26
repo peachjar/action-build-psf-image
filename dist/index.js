@@ -24444,6 +24444,7 @@ function run(context, exec, core) {
             const imageName = resolveImageName(core.getInput, repo);
             const dockerImage = `ghcr.io/${context.repo.owner}/${repo}/${imageName}:git-${sha7}`;
             yield exec('docker', [
+                'buildx',
                 'build',
                 '--network=host',
                 '--build-arg', `SKIP_INTEGRATION_TESTS=${skipIntegrationTests}`,

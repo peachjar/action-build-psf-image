@@ -38,6 +38,7 @@ export default async function run(
         const dockerImage = `ghcr.io/${context.repo.owner}/${repo}/${imageName}:git-${sha7}`
 
         await exec('docker', [
+            'buildx',
             'build',
             '--network=host',
             '--build-arg', `SKIP_INTEGRATION_TESTS=${skipIntegrationTests}`,
